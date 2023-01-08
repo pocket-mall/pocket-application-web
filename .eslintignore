@@ -1,0 +1,10 @@
+.hooks/
+
+coverage/
+dist/
+node_modules/
+wwwroot/
+
+src/environments/
+src/main.ts
+src/polyfills.ts
