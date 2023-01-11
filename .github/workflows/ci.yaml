@@ -33,3 +33,11 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: |
           yarn install --frozen-lockfile
+
+      - name: Lint
+        run: |
+          yarn run lint
+
+      - name: Test
+        run: |
+          yarn run test-ci
