@@ -18,6 +18,10 @@ quote_type = single
 [*.html]
 quote_type = double
 
+# YAML/YML global rules
+[*.{yaml,yml}]
+indent_style = space
+
 # Markdown (.md) global rules
 [*.md]
 trim_trailing_whitespace = false
