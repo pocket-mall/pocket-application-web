@@ -81,7 +81,7 @@ jobs:
           tags: |
             type=ref,prefix=0.0.0-,event=branch
             type=semver,pattern={{version}}
-            type=raw,enable=true,priority=200,prefix=0.0.0-,suffix=,value=${{ github.head_ref }}
+            type=raw,enable=${{ github.head_ref != '' }},priority=200,prefix=0.0.0-,value=${{ github.head_ref }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
