@@ -79,7 +79,7 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=ref,event=branch
+            type=ref,prefix=0.0.0-,event=branch
             type=semver,pattern={{version}}
             type=raw,enable=true,priority=200,prefix=0.0.0-,suffix=,value=${{ github.head_ref }}
 
