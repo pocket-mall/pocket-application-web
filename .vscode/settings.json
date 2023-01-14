@@ -1,18 +1,21 @@
 {
-  "editor.codeActionsOnSave": { "source.organizeImports": true },
-  "editor.detectIndentation": false,
-  "editor.linkedEditing": true,
-  "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 140,
-  "html.format.wrapAttributes": "aligned-multiple",
-  "typescript.preferences.importModuleSpecifier": "relative",
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+	"editor.codeActionsOnSave": { "source.organizeImports": true },
+	"editor.detectIndentation": false,
+	"editor.linkedEditing": true,
+	"editor.wordWrap": "wordWrapColumn",
+	"editor.wordWrapColumn": 140,
+	"html.format.wrapAttributes": "aligned-multiple",
+	"typescript.preferences.importModuleSpecifier": "relative",
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[html]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[scss]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[yaml]": {
+		"editor.autoIndent": "advanced"
+	}
 }
