@@ -29,11 +29,12 @@ jobs:
 
       - name: Install kubectl
         run: |
-          curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
           sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
           kubectl version --client
       - name: Configure kubectl
         run: |
+          kubectl version --client
           echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > kubeconfig.yaml
           export KUBECONFIG=kubeconfig.yaml
 
