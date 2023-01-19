@@ -41,7 +41,7 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
       - name: Deploy to ${{ inputs.namespace }}
-        if: ${{ !input.undeploy }}
+        if: ${{ !inputs.undeploy }}
         run: |
           helm upgrade pocket-mall --install --set image.tag=${{ inputs.imageTag }} --create-namespace ${{ inputs.namespace }} -n ${{ inputs.namespace }} ./helm
       - name: Undeploy ${{ inputs.namespace }}
