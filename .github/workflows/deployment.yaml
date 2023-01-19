@@ -3,6 +3,10 @@ name: Deployment
 on:
   workflow_dispatch:
     inputs:
+      domain:
+        description: "Domain"
+        required: true
+        type: string
       imageTag:
         description: "Image tag"
         default: 0.0.0-main
@@ -19,6 +23,7 @@ on:
 
 env:
   IMAGE_NAME: ${{ github.repository }}
+  RELEASE_NAME: pocket-mall
 
 jobs:
   deployment:
@@ -27,26 +32,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Install kubectl
-        run: |
-          curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
-          sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-          kubectl version --client
       - name: Configure kubectl
-        run: |
-          kubectl version --client
-          echo ${{ secrets.KUBE_CONFIG }} | base64 --decode > kubeconfig.yaml
-          export KUBECONFIG=kubeconfig.yaml
+        uses: azure/k8s-set-context@v3
+        with:
+          method: kubeconfig
+          kubeconfig: ${{ secrets.KUBE_CONFIG }}
 
       - name: Install Helm
         run: |
           curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+
+      - name: DNS Setup
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CLOUDFLARE_ZONE_ID }}/dns_records" \
+          -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+          -H "Content-Type: application/json" \
+          --data '{"type":"CNAME","name":"${{ inputs.namespace }}-pocket-mall","content":"${{ inputs.domain }}","ttl":3600,"priority":10,"proxied":true}'
+
       - name: Deploy to ${{ inputs.namespace }}
         if: ${{ !inputs.undeploy }}
         run: |
-          helm upgrade pocket-mall --install --set image.tag=${{ inputs.imageTag }} --create-namespace ${{ inputs.namespace }} -n ${{ inputs.namespace }} ./helm
+          helm upgrade --install pocket-mall ${{ secrets.RELEASE_NAME }} --set image.tag=${{ inputs.imageTag }} --set ingress.hosts[0].host=${{ inputs.namespace }}-pocket-mall.${{ inputs.domain }} --set ingress.hosts[0].paths[0].path=/ --set ingress.hosts[0].paths[0].pathType=Prefix --create-namespace -n ${{ inputs.namespace }} ./helm
+
       - name: Undeploy ${{ inputs.namespace }}
         if: ${{ inputs.undeploy }}
         run: |
-          helm uninstall ${{ inputs.namespace }}
+          helm list -n ${{ inputs.namespace }}
+          helm uninstall pocket-mall -n ${{ inputs.namespace }}
           kubectl delete namespace ${{ inputs.namespace }}
